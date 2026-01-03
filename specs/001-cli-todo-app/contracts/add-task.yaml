@@ -1,0 +1,61 @@
+# Contract: Add Task
+# CLI Command Contract
+
+name: Add Task
+operation: create
+agent: TaskManagerAgent
+skill: AddTask
+
+description: Create a new task with title and optional description
+
+inputs:
+  - name: title
+    type: string
+    required: true
+    validation:
+      - min_length: 1
+      - max_length: 255
+      - strip_whitespace: true
+    prompt: "Enter task title: "
+    error_message: "Title cannot be empty"
+
+  - name: description
+    type: string
+    required: false
+    default: ""
+    prompt: "Enter task description (optional): "
+
+outputs:
+  - name: task
+    type: Task
+    description: The created task with assigned ID
+
+success:
+  - message: "Task added successfully (ID: {task.id})"
+  - task_added: true
+
+errors:
+  - code: EMPTY_TITLE
+    message: "Title cannot be empty. Please try again."
+    status: 400
+
+  - code: STORAGE_FULL
+    message: "Cannot add task: storage limit reached."
+    status: 507
+
+example:
+  inputs:
+    title: "Buy groceries"
+    description: "Milk, eggs, bread"
+
+  outputs:
+    task:
+      id: 1
+      title: "Buy groceries"
+      description: "Milk, eggs, bread"
+      completed: false
+
+  console_output: |
+    Enter task title: Buy groceries
+    Enter task description (optional): Milk, eggs, bread
+    Task added successfully (ID: 1)

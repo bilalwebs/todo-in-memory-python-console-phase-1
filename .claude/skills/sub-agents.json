@@ -1,0 +1,47 @@
+{
+  "sub_agents": [
+    {
+      "name": "TaskModelAgent",
+      "type": "sub-agent",
+      "role": "Define and manage the Todo task data model",
+      "responsibilities": [
+        "Define task attributes (id, title, description, completed)",
+        "Maintain in-memory task structure",
+        "Ensure task state consistency"
+      ],
+      "does_not": [
+        "Handle CLI interaction",
+        "Implement business logic"
+      ]
+    },
+    {
+      "name": "TaskLogicAgent",
+      "type": "sub-agent",
+      "role": "Implement core business logic using defined skills",
+      "responsibilities": [
+        "Add, update, delete tasks",
+        "Toggle task completion status",
+        "Validate task existence"
+      ],
+      "depends_on": [
+        "TaskModelAgent",
+        "Skills"
+      ]
+    },
+    {
+      "name": "CLIAgent",
+      "type": "sub-agent",
+      "role": "Handle user interaction via command-line interface",
+      "responsibilities": [
+        "Display menu options",
+        "Accept user input",
+        "Invoke correct skills",
+        "Display formatted output"
+      ],
+      "does_not": [
+        "Contain business logic",
+        "Modify task rules"
+      ]
+    }
+  ]
+}

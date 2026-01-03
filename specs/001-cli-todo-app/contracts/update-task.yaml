@@ -1,0 +1,65 @@
+# Contract: Update Task
+# CLI Command Contract
+
+name: Update Task
+operation: update
+agent: TaskManagerAgent
+skill: UpdateTask
+
+description: Modify an existing task's title and/or description
+
+inputs:
+  - name: task_id
+    type: integer
+    required: true
+    validation:
+      - must_exist: true
+    prompt: "Enter task ID to update: "
+    error_message: "Task not found"
+
+  - name: new_title
+    type: string
+    required: false
+    prompt: "Enter new title (leave empty to keep current): "
+
+  - name: new_description
+    type: string
+    required: false
+    prompt: "Enter new description (leave empty to keep current): "
+
+outputs:
+  - name: updated_task
+    type: Task
+    description: The updated task
+
+success:
+  - message: "Task {task.id} updated successfully"
+  - task_updated: true
+
+errors:
+  - code: TASK_NOT_FOUND
+    message: "Task {id} not found."
+    status: 404
+
+  - code: EMPTY_TITLE
+    message: "Title cannot be empty. Update cancelled."
+    status: 400
+
+example:
+  inputs:
+    task_id: 1
+    new_title: "Buy almond milk"
+    new_description: ""
+
+  outputs:
+    updated_task:
+      id: 1
+      title: "Buy almond milk"
+      description: "Milk, eggs"
+      completed: false
+
+  console_output: |
+    Enter task ID to update: 1
+    Enter new title (leave empty to keep current): Buy almond milk
+    Enter new description (leave empty to keep current):
+    Task 1 updated successfully

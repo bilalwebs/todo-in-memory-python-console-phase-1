@@ -1,0 +1,57 @@
+# Contract: Delete Task
+# CLI Command Contract
+
+name: Delete Task
+operation: delete
+agent: TaskManagerAgent
+skill: DeleteTask
+
+description: Remove a task from the system after user confirmation
+
+inputs:
+  - name: task_id
+    type: integer
+    required: true
+    validation:
+      - must_exist: true
+    prompt: "Enter task ID to delete: "
+    error_message: "Task not found"
+
+outputs:
+  - name: deleted
+    type: boolean
+    description: True if task was deleted
+
+success:
+  - message: "Task {task_id} deleted successfully"
+  - task_deleted: true
+
+errors:
+  - code: TASK_NOT_FOUND
+    message: "Task {id} not found."
+    status: 404
+
+confirmation:
+  prompt: "Are you sure you want to delete task {id}? (y/n): "
+  valid_responses:
+    - "y"
+    - "yes"
+    - "Y"
+    - "YES"
+  cancel_response: "Delete cancelled."
+
+example:
+  inputs:
+    task_id: 1
+
+  confirmation: |
+    Enter task ID to delete: 1
+    Are you sure you want to delete task 1? (y/n): y
+
+  outputs:
+    deleted: true
+
+  console_output: |
+    Enter task ID to delete: 1
+    Are you sure you want to delete task 1? (y/n): y
+    Task 1 deleted successfully

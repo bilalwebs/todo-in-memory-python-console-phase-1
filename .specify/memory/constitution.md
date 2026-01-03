@@ -1,55 +1,119 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+  Sync Impact Report
+  ==================
+  Version change: N/A → 1.0.0 (initial constitution)
+
+  Modified principles: N/A (all new)
+  Added sections: 7 Core Principles, Quality Rules, Development Workflow
+  Removed sections: None
+
+  Templates status:
+  - .specify/templates/plan-template.md ✅ no changes needed (generic structure)
+  - .specify/templates/spec-template.md ✅ no changes needed (generic structure)
+  - .specify/templates/tasks-template.md ✅ no changes needed (generic structure)
+  - .specify/templates/commands/*.md ⚠️ no command files exist (pending)
+
+  Follow-up TODOs: None
+-->
+
+# Phase-I CLI Todo App Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. In-Memory Storage Only
+All application data MUST be stored exclusively in memory during runtime. No databases, file persistence, or external storage systems are permitted. This ensures simplicity and aligns with the CLI-focused nature of the application.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+**Rationale**: Eliminates complexity of database setup, migration, and connection management. Data is ephemeral and resets on application restart.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### II. CLI-Only Interface
+All user interactions MUST occur through the command-line interface. No web UI, GUI, or API endpoints are required or permitted. The application accepts input via stdin/args and produces output to stdout.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+**Rationale**: Keeps the application lightweight and focused on its core purpose as a developer productivity tool.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### III. Task Data Structure
+Every task MUST have the following attributes:
+- `id`: Integer, auto-incrementing and unique
+- `title`: String, required, non-empty
+- `completed`: Boolean, defaults to false
+- `description`: Optional string for additional context
 
-### [PRINCIPLE_6_NAME]
+**Rationale**: Simple, predictable structure that is easy to understand and validate. No optional nested objects or complex types.
 
+### IV. Single Responsibility for Agents
+Every agent MUST have a clearly defined, narrow scope. Agents MUST NOT handle concerns outside their explicit responsibilities. The Master agent coordinates sub-agents but MUST NOT contain direct task manipulation logic.
 
-[PRINCIPLE__DESCRIPTION]
+**Rationale**: Prevents spaghetti code where logic is scattered across multiple agents. Easier to test, debug, and extend.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+### V. Atomic, Reusable Skills
+Every skill MUST perform exactly one action and be independently testable. Skills MUST NOT have hidden dependencies or side effects beyond their documented purpose.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+**Rationale**: Skills become building blocks that can be composed in different ways. Reduces bugs and improves maintainability.
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+### VI. No External Integrations
+The application MUST NOT include web frameworks, authentication systems, or AI chatbot integrations. Third-party APIs, OAuth, and similar external services are explicitly out of scope.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+**Rationale**: Strips away complexity not needed for a todo application. Reduces attack surface and dependency maintenance burden.
+
+### VII. Readable Logic for Beginners
+Code MUST be written with clarity and learnability as priorities. Complex patterns SHOULD be avoided when simpler alternatives exist. Comments SHOULD explain the "why" not the "what".
+
+**Rationale**: This project serves as an educational example. Code should be approachable for developers learning agent-based architectures.
+
+## Quality Rules
+
+All implementations MUST comply with these quality standards:
+
+1. **Input Validation**: Every user input MUST be validated before execution. Invalid input MUST produce a clear error message.
+
+2. **Unique Sequential IDs**: Task IDs MUST be unique integers that increment sequentially. Deleted task IDs MUST NOT be reused.
+
+3. **Destructive Action Confirmation**: Delete and similar destructive operations MUST prompt for user confirmation before execution.
+
+4. **Consistent CLI Display**: Task output MUST be formatted consistently. Clear column headers and aligned columns required.
+
+5. **Master Agent Coordination**: The Master agent delegates to sub-agents but contains no business logic itself.
+
+## Development Workflow
+
+### Phase Structure
+1. **Spec Phase**: Define requirements and user stories
+2. **Plan Phase**: Design architecture and interfaces
+3. **Tasks Phase**: Break down work into testable tasks
+4. **Red Phase**: Write failing tests first
+5. **Green Phase**: Implement minimal code to pass tests
+6. **Refactor Phase**: Improve code while maintaining passing tests
+
+### Agent Responsibilities
+- **TaskModelAgent**: Defines and manages the task data structure
+- **TaskLogicAgent**: Implements CRUD operations and validation
+- **CLIAgent**: Handles user interaction and output formatting
+
+### Code Standards
+- Follow single responsibility principle at function and module level
+- Keep functions under 30 lines where practical
+- Use meaningful variable and function names
+- No magic numbers or hardcoded values (use constants)
+- Validate all inputs at system boundaries
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This constitution is the authoritative source for all project decisions. It supersedes individual preferences and informal practices.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+### Amendment Process
+1. Proposed amendments MUST be documented with rationale
+2. Changes MUST update the constitution version
+3. Major changes require review and approval
+4. Breaking changes MUST include migration guidance
+
+### Versioning
+- **MAJOR**: Incompatible principle changes or removals
+- **MINOR**: New principles or significant expansions
+- **PATCH**: Clarifications, wording fixes, non-semantic changes
+
+### Compliance
+All code contributions MUST be verified against this constitution. Reviews MUST check for:
+- Principle violations
+- Quality rule adherence
+- Agent responsibility boundaries
+
+**Version**: 1.0.0 | **Ratified**: 2026-01-03 | **Last Amended**: 2026-01-03

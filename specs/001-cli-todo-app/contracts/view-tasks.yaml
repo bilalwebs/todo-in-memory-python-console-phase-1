@@ -1,0 +1,52 @@
+# Contract: View Tasks
+# CLI Command Contract
+
+name: View All Tasks
+operation: read
+agent: DisplayAgent
+skill: ViewTasks
+
+description: Display all tasks with ID, title, description, and completion status
+
+inputs: []
+
+outputs:
+  - name: tasks
+    type: List[Task]
+    description: List of all tasks in the system
+
+success:
+  - display_format: |
+      === Tasks ===
+      ID | Status   | Title        | Description
+      --- | -------- | ------------ | ------------
+      1   | [ ]      | Buy groceries| Milk, eggs
+      2   | [X]      | Finish report| Due Friday
+      (2 tasks)
+
+  - empty_message: "No tasks yet. Add a task to get started."
+
+errors: []
+
+example:
+  inputs: []
+
+  outputs:
+    tasks:
+      - id: 1
+        title: "Buy groceries"
+        description: "Milk, eggs"
+        completed: false
+      - id: 2
+        title: "Finish report"
+        description: "Due Friday"
+        completed: true
+
+  console_output: |
+    === Tasks ===
+    ID | Status | Title          | Description
+    --- | ------ | -------------- | ------------
+    1   | [ ]    | Buy groceries  | Milk, eggs
+    2   | [X]    | Finish report  | Due Friday
+
+    (2 tasks)

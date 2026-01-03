@@ -1,0 +1,51 @@
+# Contract: Toggle Task
+# CLI Command Contract
+
+name: Toggle Task Completion
+operation: update
+agent: TaskManagerAgent
+skill: ToggleTaskComplete
+
+description: Flip a task's completion status between complete and incomplete
+
+inputs:
+  - name: task_id
+    type: integer
+    required: true
+    validation:
+      - must_exist: true
+    prompt: "Enter task ID to toggle: "
+    error_message: "Task not found"
+
+outputs:
+  - name: toggled_task
+    type: Task
+    description: The task with updated status
+
+success:
+  - message: "Task {task.id} marked as {status}"
+  - status_changed: true
+
+errors:
+  - code: TASK_NOT_FOUND
+    message: "Task {id} not found."
+    status: 404
+
+example:
+  inputs:
+    task_id: 1
+
+  pre_state:
+    id: 1
+    title: "Buy groceries"
+    completed: false
+
+  outputs:
+    toggled_task:
+      id: 1
+      title: "Buy groceries"
+      completed: true
+
+  console_output: |
+    Enter task ID to toggle: 1
+    Task 1 marked as complete
